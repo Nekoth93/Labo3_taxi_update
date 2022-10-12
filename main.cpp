@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------------------
-Nom du fichier  : Labo_02_Taxi_j.cpp
+Nom du fichier : Labo_02_Taxi_j.cpp
 Auteur(s) 		: Kevin Auberson & Nicolas Carbonara
 Date creation 	: 07.10.2022
 Description 	: Calcule le prix d’une course en € d'un taxi
@@ -22,16 +22,16 @@ int main()
    // Initializing constants
    //-------------------------------------------------------------
    // Prices
-   const double PRICE_TAX_BASE 		= 5.00;
+   const double PRICE_TAX_BASE 		   = 5.00;
    const double PRICE_TAX_BAG 			= 2.60;
    const double PRICE_MINUTE_DAY 		= 1.00;
-   const double PRICE_MINUTE_NIGHT 	= 1.60;
+   const double PRICE_MINUTE_NIGHT 	   = 1.60;
    const double CHANGE_HOUR_TO_MINUTE 	= 60;
-   const int 	 HOURS_BEGIN_DAY 		= 8;
+   const int 	 HOURS_BEGIN_DAY 		   = 8;
    const int 	 HOURS_FINISH_DAY 		= 20;
    // Users min/max inputs
-   const int 	 MINBAG 				= 0;
-   const int 	 MAXBAG 				= 4;
+   const int 	 MINBAG 				   = 0;
+   const int 	 MAXBAG 				   = 4;
    const int 	 MINKM 					= 0;
    const int 	 MAXKM	 				= 500;
    const int 	 MINSPEED 				= 50;
