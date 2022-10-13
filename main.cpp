@@ -148,18 +148,48 @@ int main()
                   tripTotal = travelTimeInMinutes * PRICE_MINUTE_DAY;
                }
             }
-               // else take night prices
+            // else take night prices
             else if (depTimeInMinutes >= HOURS_FINISH_DAY * HOUR_TO_MINUTE or
                      depTimeInMinutes <  HOURS_BEGIN_DAY  * HOUR_TO_MINUTE)
             {
-               if (MINUTES_IN_DAY - depTimeInMinutes + travelTimeInMinutes > HOURS_BEGIN_DAY)
+               if (depTimeInMinutes >= MINUTES_IN_DAY - HOUR_TO_MINUTE and
+               depTimeInMinutes < MINUTES_IN_DAY ) {
+                  /*
+                   * Dépassement de l'heure de nuit à l'heure de jour :
+                  *   Avant minuit :
+                  *   (heureDeDepart + heureDeTrajet - 24 h) - heureHoraireJour, on
+                  *   obtient le temps de dépassement.
+                  *
+                  *   Après minuit :
+                  *   24h - heureDeDepart + heureDeTrajet - heureHoraireJour.
+                  *
+                  *   À minuit :
+                  *   heureDeTrajet - heureHoraireJour.
+                  *   */
+
+                  tripTotal = (depTimeInMinutes + travelTimeInMinutes -
+                               MINUTES_IN_DAY - HOURS_BEGIN_DAY) * PRICE_MINUTE_DAY +
+
+                              (MINUTES_IN_DAY - depTimeInMinutes + HOURS_BEGIN_DAY) *
+                              PRICE_MINUTE_NIGHT;
+               }
+
+               else if (depTimeInMinutes > MINUTES_IN_DAY)
                {
                   tripTotal = (MINUTES_IN_DAY - depTimeInMinutes + travelTimeInMinutes
                                - HOURS_BEGIN_DAY) * PRICE_MINUTE_DAY +
 
-                              (HOURS_BEGIN_DAY - depTimeInMinutes - MINUTES_IN_DAY) *
-                              PRICE_MINUTE_NIGHT * HOUR_TO_MINUTE;
+                              (HOURS_BEGIN_DAY + depTimeInMinutes - MINUTES_IN_DAY) *
+                              PRICE_MINUTE_NIGHT;
                }
+
+               else if (depTimeInMinutes == MINUTES_IN_DAY)
+               {
+                  tripTotal = (travelTimeInMinutes - HOURS_BEGIN_DAY) *
+                              PRICE_MINUTE_DAY +
+                              (HOURS_BEGIN_DAY) * PRICE_MINUTE_NIGHT;
+               }
+
                else
                {
                   // Casting to double to avoid integer division
@@ -226,18 +256,9 @@ int main()
 
    /*
     * Travail à faire :
-    * Gérer le changement de tarif durant le trajet :
-    *   Dépassement de l'heure de jour à l'heure de nuit :
-    *   Le trajet ne pouvant pas être plus long que 10 heures, la première heure de
-    *   départ qui mènerait à un dépassement est 11 h. En faisant l'opération
-    *   heureDeDepart + heureDeTrajet - heureHoraireNuit, on obtient le temps de
-    *   dépassement.
+    * Gérer le changement de tarif durant le trajet
     *
-    *   Dépassement de l'heure de nuit à l'heure de jour :
-    *   L'heure qui mènerait à un dépassement est 23 h. En faisant (heureDeDepart +
-    *   heureDeTrajet - 24 h) - heureHoraireJour, on obtient le temps de dépassement.
-    *
-    * Gérer la saisie de l'heure au format hh.mm. ( Normalement bon).
+    * Gérer la saisie de l'heure au format hh.mm. (Normalement bon).
     *
     */
 
