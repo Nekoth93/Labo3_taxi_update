@@ -4,7 +4,7 @@ Auteur(s) 		      : Kevin Auberson & Nicolas Carbonara
 Modification         : Delétraz Alexandre - Drompt Laurie
 Date creation 	      : 07.10.2022
 Date de modification : 12.10.2022
-Description 	      : Calcule le prix d’une course en € d'un taxi
+Description 	      : Calcule le prix d’une course d'un taxi
 Remarque(s) 	      : Le programme ne gère pas les erreurs de saisie (caractères
                        spéciaux et lettres).
                        Le programme traite les valeurs incorrectes (hors champ).
@@ -42,15 +42,7 @@ int main()
    //-------------------------------------------------------------
    // Initializing variables
    //-------------------------------------------------------------
-   // Users inputs
-   int    numberBag;
-   int    distanceTrip;
-   int    averageSpeed;
-   int    hourBegin;
-   // Prices
-   double BagTotal;
-   double tripTotal;
-   double finalTotal;
+
    // Others
    bool   checkMistake = true;
 
@@ -60,7 +52,11 @@ int main()
    //-------------------------------------------------------------
    //                          Welcome
    //-------------------------------------------------------------
-   cout << "Bonjour, ce programme ..."                                   << endl
+   cout << "Bonjour, ce programme permet de calculer le prix d'une"      << endl
+        << " course de taxi."                                            << endl
+        << "Lorsque'il vous sera demander l'heure de depart, veuillez"   << endl
+        << "separer les heures et les minutes par un espace et mettre"   << endl
+        << "le nombre minute meme si c'est une heure pile."              << endl
         << "Voici les conditions     "                                   << endl
         << "=========================="                                  << endl
         << " - prise en charge  : " << setw(WIDTH) << PRICE_TAX_BASE 	 << endl
@@ -74,14 +70,29 @@ int main()
    // Ask the user to enter their order
    //-------------------------------------------------------------
 
-   const double CHANGE_HOUR_TO_MINUTE = 60;
+   const int HOUR_TO_MINUTE = 60;
+   const int MINUTES_IN_DAY = 24 * HOUR_TO_MINUTE;
+
+   // Users inputs
+   int    numberBag;
+   int    distanceTrip;
+   int    averageSpeed;
+   int    hourBegin;
+   int    minuteBegin;
+   int    depTimeInMinutes;
+   // Prices
+   double BagTotal;
+   double tripTotal;
+   double finalTotal;
+
    // Users min/max inputs
-   const int 	 MIN_BAG 				  = 0;
-   const int 	 MAX_BAG 				  = 4;
-   const int 	 MIN_KM 					  = 0;
-   const int 	 MAX_KM	 				  = 500;
-   const int 	 MIN_SPEED 				  = 50;
-   const int 	 MAX_SPEED	 			  = 120;
+   const int 	 MIN_BAG   = 0;
+   const int 	 MAX_BAG   = 4;
+   const int 	 MIN_KM    = 0;
+   const int 	 MAX_KM	  = 500;
+   const int 	 MIN_SPEED = 50;
+   const int 	 MAX_SPEED = 120;
+
 
    cout << "Votre commande"         << endl
         << "=============="         << endl
@@ -105,28 +116,55 @@ int main()
          cin  >> averageSpeed;
          CLEAR_BUFFER;
 
-         // check if the speed is between MIN_SPEED and MAXSPEED
+         // check if the speed is between MIN_SPEED and MAX_SPEED
          if (averageSpeed >= MIN_SPEED and averageSpeed <= MAX_SPEED)
          {
             cout << "- depart            [0 - 23] : ";
-            cin  >> hourBegin;
+            cin  >> hourBegin >> minuteBegin;
+            depTimeInMinutes = hourBegin * HOUR_TO_MINUTE + minuteBegin;
             // Insert a blank line for a better reading on the output
             cout << endl;
             CLEAR_BUFFER;
 
-            // IF start hour is inbetween the hour of the day then take day prices
-            if (hourBegin >= HOURS_BEGIN_DAY and hourBegin < HOURS_FINISH_DAY)
+            double travelTimeInMinutes = double(distanceTrip) / averageSpeed *
+                                         HOUR_TO_MINUTE;
+            // IF start hour is between the hour of the day then take day prices
+            if (depTimeInMinutes >= HOURS_BEGIN_DAY  * HOUR_TO_MINUTE and
+                depTimeInMinutes <  HOURS_FINISH_DAY * HOUR_TO_MINUTE)
             {
-               // Casting to double to avoid integer division
-               tripTotal = double(distanceTrip) / averageSpeed *
-                           CHANGE_HOUR_TO_MINUTE * PRICE_MINUTE_DAY;
+               if (depTimeInMinutes + travelTimeInMinutes > HOURS_FINISH_DAY
+                  * HOUR_TO_MINUTE)
+               {
+                  tripTotal = (depTimeInMinutes  + travelTimeInMinutes -
+                              HOURS_FINISH_DAY   * HOUR_TO_MINUTE)     *
+                              PRICE_MINUTE_NIGHT +
+
+                              (HOURS_FINISH_DAY  * HOUR_TO_MINUTE      -
+                              depTimeInMinutes)  * PRICE_MINUTE_DAY;
+               }
+               else
+               {
+                  // Casting to double to avoid integer division
+                  tripTotal = travelTimeInMinutes * PRICE_MINUTE_DAY;
+               }
             }
                // else take night prices
-            else if (0 <= hourBegin and hourBegin <= 23)
+            else if (depTimeInMinutes >= HOURS_FINISH_DAY * HOUR_TO_MINUTE or
+                     depTimeInMinutes <  HOURS_BEGIN_DAY  * HOUR_TO_MINUTE)
             {
-               // Casting to double to avoid integer division
-               tripTotal = double(distanceTrip) / averageSpeed *
-                           CHANGE_HOUR_TO_MINUTE * PRICE_MINUTE_NIGHT;
+               if (MINUTES_IN_DAY - depTimeInMinutes + travelTimeInMinutes > HOURS_BEGIN_DAY)
+               {
+                  tripTotal = (MINUTES_IN_DAY - depTimeInMinutes + travelTimeInMinutes
+                               - HOURS_BEGIN_DAY) * PRICE_MINUTE_DAY +
+
+                              (HOURS_BEGIN_DAY - depTimeInMinutes - MINUTES_IN_DAY) *
+                              PRICE_MINUTE_NIGHT * HOUR_TO_MINUTE;
+               }
+               else
+               {
+                  // Casting to double to avoid integer division
+                  tripTotal = travelTimeInMinutes * PRICE_MINUTE_NIGHT;
+               }
             }
             else
             {	cout << "Erreur : l'heure de depart doit etre comprise entre "
@@ -199,9 +237,10 @@ int main()
     *   L'heure qui mènerait à un dépassement est 23 h. En faisant (heureDeDepart +
     *   heureDeTrajet - 24 h) - heureHoraireJour, on obtient le temps de dépassement.
     *
-    * Gérer la saisie de l'heure au format hh.mm.
+    * Gérer la saisie de l'heure au format hh.mm. ( Normalement bon).
     *
     */
+
 
    return EXIT_SUCCESS;
 }
