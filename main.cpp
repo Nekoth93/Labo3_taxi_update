@@ -54,15 +54,14 @@ int main()
    //-------------------------------------------------------------
    cout << "Bonjour, ce programme permet de calculer le prix d'une"      << endl
         << " course de taxi."                                            << endl
-        << "Lorsque'il vous sera demander l'heure de depart, veuillez"   << endl
-        << "separer les heures et les minutes par un espace et mettre"   << endl
-        << "le nombre minute meme si c'est une heure pile."              << endl
-        << "Voici les conditions     "                                   << endl
+        << "Lorsque'il vous sera demander l'heure de depart, veuilliez"  << endl
+        << "saisir l'heure en format hh:mm."                             << endl
+        << "Voici les conditions      "                                  << endl
         << "=========================="                                  << endl
-        << " - prise en charge  : " << setw(WIDTH) << PRICE_TAX_BASE 	 << endl
-        << " - supp par bagage  : " << setw(WIDTH)	<< PRICE_TAX_BAG 		 << endl
-        << " - tarif/min (jour) : " << setw(WIDTH)	<< PRICE_MINUTE_DAY 	 << endl
-        << " - tarif/min (nuit) : " << setw(WIDTH)	<< PRICE_MINUTE_NIGHT << endl
+        << " - prise en charge  : " << setw(WIDTH) << PRICE_TAX_BASE 	    << endl
+        << " - supp par bagage  : " << setw(WIDTH)	<< PRICE_TAX_BAG 		<< endl
+        << " - tarif/min (jour) : " << setw(WIDTH)	<< PRICE_MINUTE_DAY 	<< endl
+        << " - tarif/min (nuit) : " << setw(WIDTH)	<< PRICE_MINUTE_NIGHT   << endl
         << " - heures de jour   : " << "["         << HOURS_BEGIN_DAY    << " - "
         << HOURS_FINISH_DAY         << "]"         << endl               << endl;
 
@@ -119,7 +118,7 @@ int main()
          // check if the speed is between MIN_SPEED and MAX_SPEED
          if (averageSpeed >= MIN_SPEED and averageSpeed <= MAX_SPEED)
          {
-            cout << "- depart            [0 - 23] : ";
+            cout << "- depart            [hh:mm] : ";
             cin  >> hourBegin >> minuteBegin;
             depTimeInMinutes = hourBegin * HOUR_TO_MINUTE + minuteBegin;
             // Insert a blank line for a better reading on the output
@@ -152,26 +151,14 @@ int main()
             else if (depTimeInMinutes >= HOURS_FINISH_DAY * HOUR_TO_MINUTE or
                      depTimeInMinutes <  HOURS_BEGIN_DAY  * HOUR_TO_MINUTE)
             {
-               if (depTimeInMinutes >= MINUTES_IN_DAY - HOUR_TO_MINUTE and
-               depTimeInMinutes < MINUTES_IN_DAY ) {
-                  /*
-                   * Dépassement de l'heure de nuit à l'heure de jour :
-                  *   Avant minuit :
-                  *   (heureDeDepart + heureDeTrajet - 24 h) - heureHoraireJour, on
-                  *   obtient le temps de dépassement.
-                  *
-                  *   Après minuit :
-                  *   24h - heureDeDepart + heureDeTrajet - heureHoraireJour.
-                  *
-                  *   À minuit :
-                  *   heureDeTrajet - heureHoraireJour.
-                  *   */
+               if (depTimeInMinutes + travelTimeInMinutes >= HOURS_BEGIN_DAY * HOUR_TO_MINUTE) {
+                   tripTotal = (depTimeInMinutes  + travelTimeInMinutes -
+                                HOURS_BEGIN_DAY   * HOUR_TO_MINUTE)     *
+                               PRICE_MINUTE_NIGHT +
 
-                  tripTotal = (depTimeInMinutes + travelTimeInMinutes -
-                               MINUTES_IN_DAY - HOURS_BEGIN_DAY) * PRICE_MINUTE_DAY +
+                               (HOURS_BEGIN_DAY  * HOUR_TO_MINUTE      -
+                                depTimeInMinutes)  * PRICE_MINUTE_DAY;
 
-                              (MINUTES_IN_DAY - depTimeInMinutes + HOURS_BEGIN_DAY) *
-                              PRICE_MINUTE_NIGHT;
                }
 
                else if (depTimeInMinutes > MINUTES_IN_DAY)
