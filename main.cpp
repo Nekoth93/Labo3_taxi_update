@@ -102,113 +102,108 @@ int main()
    // Check if the number of bag is between MIN_BAG and MAX_BAG
    if (numberBag >= MIN_BAG and numberBag <= MAX_BAG)
    {
-      BagTotal = PRICE_TAX_BAG * numberBag;
-
-      cout << "- distance [km]    [" << MIN_KM << " - " << MAX_KM << "] : ";
-      cin  >> distanceTrip;
-      CLEAR_BUFFER;
-
-      // check if the distance is between MIN_KM and MAX_KM
-      if (distanceTrip >= MIN_KM and distanceTrip <= MAX_KM)
-      {
-         cout << "- vitesse         [" << MIN_SPEED << " - " << MAX_SPEED << "] : ";
-         cin  >> averageSpeed;
-         CLEAR_BUFFER;
-
-         // check if the speed is between MIN_SPEED and MAX_SPEED
-         if (averageSpeed >= MIN_SPEED and averageSpeed <= MAX_SPEED)
-         {
-            cout << "- depart            [hh:mm] : ";
-            cin  >> hourBegin >> minuteBegin;
-            depTimeInMinutes = hourBegin * HOUR_TO_MINUTE + minuteBegin;
-            // Insert a blank line for a better reading on the output
-            cout << endl;
-            CLEAR_BUFFER;
-
-            double travelTimeInMinutes = double(distanceTrip) / averageSpeed *
-                                         HOUR_TO_MINUTE;
-            // IF start hour is between the hour of the day then take day prices
-            if (depTimeInMinutes >= HOURS_BEGIN_DAY  * HOUR_TO_MINUTE and
-                depTimeInMinutes <  HOURS_FINISH_DAY * HOUR_TO_MINUTE)
-            {
-               if (depTimeInMinutes + travelTimeInMinutes > HOURS_FINISH_DAY
-                  * HOUR_TO_MINUTE)
-               {
-                  tripTotal = (depTimeInMinutes  + travelTimeInMinutes -
-                              HOURS_FINISH_DAY   * HOUR_TO_MINUTE)     *
-                              PRICE_MINUTE_NIGHT +
-
-                              (HOURS_FINISH_DAY  * HOUR_TO_MINUTE      -
-                              depTimeInMinutes)  * PRICE_MINUTE_DAY;
-               }
-               else
-               {
-                  // Casting to double to avoid integer division
-                  tripTotal = travelTimeInMinutes * PRICE_MINUTE_DAY;
-               }
-            }
-            // else take night prices
-            else if (depTimeInMinutes >= HOURS_FINISH_DAY * HOUR_TO_MINUTE or
-                     depTimeInMinutes <  HOURS_BEGIN_DAY  * HOUR_TO_MINUTE)
-            {
-               if (depTimeInMinutes + travelTimeInMinutes >= HOURS_BEGIN_DAY * HOUR_TO_MINUTE) {
-                   tripTotal = (depTimeInMinutes  + travelTimeInMinutes -
-                                HOURS_BEGIN_DAY   * HOUR_TO_MINUTE)     *
-                               PRICE_MINUTE_NIGHT +
-
-                               (HOURS_BEGIN_DAY  * HOUR_TO_MINUTE      -
-                                depTimeInMinutes)  * PRICE_MINUTE_DAY;
-
-               }
-
-               else if (depTimeInMinutes > MINUTES_IN_DAY)
-               {
-                  tripTotal = (MINUTES_IN_DAY - depTimeInMinutes + travelTimeInMinutes
-                               - HOURS_BEGIN_DAY) * PRICE_MINUTE_DAY +
-
-                              (HOURS_BEGIN_DAY + depTimeInMinutes - MINUTES_IN_DAY) *
-                              PRICE_MINUTE_NIGHT;
-               }
-
-               else if (depTimeInMinutes == MINUTES_IN_DAY)
-               {
-                  tripTotal = (travelTimeInMinutes - HOURS_BEGIN_DAY) *
-                              PRICE_MINUTE_DAY +
-                              (HOURS_BEGIN_DAY) * PRICE_MINUTE_NIGHT;
-               }
-
-               else
-               {
-                  // Casting to double to avoid integer division
-                  tripTotal = travelTimeInMinutes * PRICE_MINUTE_NIGHT;
-               }
-            }
-            else
-            {	cout << "Erreur : l'heure de depart doit etre comprise entre "
-                        "0 et 23" << endl;
-               checkMistake = false;
-            }
-         }
-         else
-         {
-            cout << "Erreur : la vitesse doit etre comprise entre "
-                 << MIN_SPEED << " et " << MAX_SPEED << endl;
-            checkMistake = false;
-         }
-      }
-      else
-      {
-         cout << "Erreur : la distance doit etre comprise entre "
-              << MIN_KM << " et " << MAX_KM << endl;
-         checkMistake = false;
-      }
+       BagTotal = PRICE_TAX_BAG * numberBag;
    }
    else
    {
-      cout << "Erreur : le nombre de bagage doit etre compris entre "
-           << MIN_BAG << " et " << MAX_BAG << endl;
-      checkMistake = false;
+       cout << "Erreur : le nombre de bagage doit etre compris entre "
+            << MIN_BAG << " et " << MAX_BAG << endl;
+       checkMistake = false;
    }
+
+
+    cout << "- distance [km]    [" << MIN_KM << " - " << MAX_KM << "] : ";
+    cin  >> distanceTrip;
+    CLEAR_BUFFER;
+
+    // check if the distance is between MIN_KM and MAX_KM
+    if (distanceTrip >= MIN_KM and distanceTrip <= MAX_KM)
+    {
+
+    }
+
+    else
+    {
+        cout << "Erreur : la distance doit etre comprise entre "
+             << MIN_KM << " et " << MAX_KM << endl;
+        checkMistake = false;
+    }
+
+
+    cout << "- vitesse         [" << MIN_SPEED << " - " << MAX_SPEED << "] : ";
+    cin  >> averageSpeed;
+    CLEAR_BUFFER;
+
+    // check if the speed is between MIN_SPEED and MAX_SPEED
+    if (averageSpeed >= MIN_SPEED and averageSpeed <= MAX_SPEED)
+    {
+
+    }
+    else
+    {
+        cout << "Erreur : la vitesse doit etre comprise entre "
+             << MIN_SPEED << " et " << MAX_SPEED << endl;
+        checkMistake = false;
+    }
+
+
+    cout << "- depart            [hh:mm] : ";
+    cin  >> hourBegin >> minuteBegin;
+    depTimeInMinutes = hourBegin * HOUR_TO_MINUTE + minuteBegin;
+    // Insert a blank line for a better reading on the output
+    cout << endl;
+    CLEAR_BUFFER;
+
+    double travelTimeInMinutes = double(distanceTrip) / averageSpeed * HOUR_TO_MINUTE;
+    // IF start hour is between the hour of the day then take day prices
+    if (depTimeInMinutes >= HOURS_BEGIN_DAY  * HOUR_TO_MINUTE and
+    depTimeInMinutes <  HOURS_FINISH_DAY * HOUR_TO_MINUTE)
+    {
+        if (depTimeInMinutes + travelTimeInMinutes > HOURS_FINISH_DAY
+                                                     * HOUR_TO_MINUTE) {
+            tripTotal = (depTimeInMinutes + travelTimeInMinutes -
+                         HOURS_FINISH_DAY * HOUR_TO_MINUTE) *
+                        PRICE_MINUTE_NIGHT +
+
+                        (HOURS_FINISH_DAY * HOUR_TO_MINUTE -
+                         depTimeInMinutes) * PRICE_MINUTE_DAY;
+        } else {
+
+            tripTotal = travelTimeInMinutes * PRICE_MINUTE_DAY;
+        }
+
+    }
+    // else take night prices
+    else if (depTimeInMinutes <  HOURS_BEGIN_DAY  * HOUR_TO_MINUTE or
+         depTimeInMinutes >= HOURS_FINISH_DAY * HOUR_TO_MINUTE)
+    {
+        if (depTimeInMinutes + travelTimeInMinutes >= MINUTES_IN_DAY)
+        {
+            tripTotal = //de 20 h a minuit.
+                    (MINUTES_IN_DAY - depTimeInMinutes +
+                     travelTimeInMinutes -
+                     (MINUTES_IN_DAY - depTimeInMinutes)) *
+                    PRICE_MINUTE_NIGHT;
+            if(MINUTES_IN_DAY - (depTimeInMinutes+ travelTimeInMinutes) > HOURS_BEGIN_DAY)
+            {
+                tripTotal += (depTimeInMinutes  + travelTimeInMinutes -
+                              HOURS_BEGIN_DAY   * HOUR_TO_MINUTE)     *
+                              PRICE_MINUTE_DAY;
+            }
+        }
+
+        else
+        {
+          // Casting to double to avoid integer division
+          tripTotal = travelTimeInMinutes * PRICE_MINUTE_NIGHT;
+        }
+    }
+    else
+    {	cout << "Erreur : l'heure de depart doit etre comprise entre "
+            "0 et 23" << endl;
+    checkMistake = false;
+    }
+
 
    //-------------------------------------------------------------
    // If all values are correct, calculate the total
@@ -248,7 +243,5 @@ int main()
     * Gérer la saisie de l'heure au format hh.mm. (Normalement bon).
     *
     */
-
-
    return EXIT_SUCCESS;
 }
