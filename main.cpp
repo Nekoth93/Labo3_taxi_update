@@ -81,8 +81,8 @@ int main()
 
 
    // Others
-   const int 	 WIDTH              = 8;
-   const int	 WIDTHTOTALPRICE    = 26;
+   const int WIDTH             = 8;
+   const int WIDTH_TOTAL_PRICE = 26;
 
    // Setting the precision of the output and aligns it to the left.
    cout << fixed << setprecision(2) << left;
@@ -96,7 +96,8 @@ int main()
         << TAX_BAG_MSG            << setw(WIDTH)      << PRICE_TAX_BAG      << endl
         << PRICE_DAY_MSG          << setw(WIDTH)      << PRICE_MINUTE_DAY   << endl
         << PRICE_NIGHT_MSG        << setw(WIDTH)      << PRICE_MINUTE_NIGHT << endl
-        << DAY_SCHEDULE_MSG       << OPEN_INTER_SYMB  << HOURS_BEGIN_DAY    << MID_VALUE_SEPARATION_SYM
+        << DAY_SCHEDULE_MSG       << OPEN_INTER_SYMB  << HOURS_BEGIN_DAY
+        << MID_VALUE_SEPARATION_SYM
         << HOURS_FINISH_DAY       << CLOSE_INTER_SYMB << endl               << endl;
 
    //-------------------------------------------------------------
@@ -119,13 +120,13 @@ int main()
    double finalTotal;
 
    // Users min/max inputs.
-   const int MIN_BAG     = 0;
-   const int MAX_BAG     = 4;
-   const int MIN_KM      = 0;
-   const int MAX_KM	    = 500;
-   const int MIN_SPEED   = 50;
-   const int MAX_SPEED   = 120;
-   const int FIRST_HOUR  = 0;
+   const int MIN_BAG    = 0;
+   const int MAX_BAG    = 4;
+   const int MIN_KM     = 0;
+   const int MAX_KM	   = 500;
+   const int MIN_SPEED  = 50;
+   const int MAX_SPEED  = 120;
+   const int FIRST_HOUR = 0;
 
    cout << ORDER_MSG            << endl
         << ORDER_SEPARATION_SYM << endl
@@ -192,13 +193,13 @@ int main()
    if (depTimeInMinutes >= HOURS_BEGIN_DAY  * HOUR_TO_MINUTE and
        depTimeInMinutes <  HOURS_FINISH_DAY * HOUR_TO_MINUTE)
    {
-      if (depTimeInMinutes + travelTimeInMinutes > HOURS_FINISH_DAY
-          * HOUR_TO_MINUTE)
+      if (depTimeInMinutes + travelTimeInMinutes > HOURS_FINISH_DAY *
+          HOUR_TO_MINUTE)
       {
          tripTotal =  //calculates the time that exceeds the night.
                       (depTimeInMinutes   + travelTimeInMinutes -
-                      HOURS_FINISH_DAY   * HOUR_TO_MINUTE)     *
-                      PRICE_MINUTE_NIGHT +
+                       HOURS_FINISH_DAY   * HOUR_TO_MINUTE)     *
+                       PRICE_MINUTE_NIGHT +
                       //calculate the time which is in days.
                       (HOURS_FINISH_DAY * HOUR_TO_MINUTE -
                       depTimeInMinutes) * PRICE_MINUTE_DAY;
@@ -224,30 +225,30 @@ int main()
                      PRICE_MINUTE_NIGHT;
          //if the trip start before midnight and finish in the morning.
          if ((depTimeInMinutes + travelTimeInMinutes) - MINUTES_IN_DAY >
-              HOURS_BEGIN_DAY * HOUR_TO_MINUTE)
+              HOURS_BEGIN_DAY  * HOUR_TO_MINUTE)
          {
 
             tripTotal = //calculates the time that exceeds the day.
                         (depTimeInMinutes + travelTimeInMinutes -
-                        MINUTES_IN_DAY - HOURS_BEGIN_DAY * HOUR_TO_MINUTE) *
-                        PRICE_MINUTE_DAY +
+                         MINUTES_IN_DAY   - HOURS_BEGIN_DAY     * HOUR_TO_MINUTE) *
+                         PRICE_MINUTE_DAY +
                         //calculate what remain in night.
-                        (MINUTES_IN_DAY + HOURS_BEGIN_DAY * HOUR_TO_MINUTE -
+                        (MINUTES_IN_DAY    + HOURS_BEGIN_DAY * HOUR_TO_MINUTE -
                          depTimeInMinutes) * PRICE_MINUTE_NIGHT;
          }
       }
-      else if (0 <= depTimeInMinutes and depTimeInMinutes < HOURS_BEGIN_DAY *
-                HOUR_TO_MINUTE)
+      else if (FIRST_HOUR <= depTimeInMinutes and depTimeInMinutes <
+               HOURS_BEGIN_DAY * HOUR_TO_MINUTE)
       {
          if (depTimeInMinutes + travelTimeInMinutes > HOURS_BEGIN_DAY *
-              HOUR_TO_MINUTE)
+             HOUR_TO_MINUTE)
          {
             tripTotal = depTimeInMinutes + travelTimeInMinutes -
-               HOURS_BEGIN_DAY * HOUR_TO_MINUTE *
-               PRICE_MINUTE_DAY +
+                        HOURS_BEGIN_DAY  * HOUR_TO_MINUTE      *
+                        PRICE_MINUTE_DAY +
 
-               (HOURS_BEGIN_DAY * HOUR_TO_MINUTE -
-               depTimeInMinutes) * PRICE_MINUTE_NIGHT;
+               (HOURS_BEGIN_DAY   * HOUR_TO_MINUTE -
+                depTimeInMinutes) * PRICE_MINUTE_NIGHT;
          }
          else
          {
@@ -260,23 +261,22 @@ int main()
       }
    }
 
-
    //-------------------------------------------------------------
    //     If all values are correct, calculate the total
    //-------------------------------------------------------------
 
    finalTotal = PRICE_TAX_BASE + BagTotal + tripTotal;
 
-   cout << TICKET_MSG             << endl
-        << TICKET_SEPARATION_SYM  << endl
-        << TICKET_BASE_MSG        << setw(WIDTH)                     << right
-        << PRICE_TAX_BASE         << endl
-        << TICKET_BAG_MSG         << setw(WIDTH)                     << right
-        << BagTotal               << endl
-        << TICKET_PRICE_MSG       << setw(WIDTH)                     << right
-        << tripTotal 	          << endl
-        << setw(WIDTHTOTALPRICE)  << TICKET_TOTAL_MSG << setw(WIDTH) << right
-        << finalTotal 			    << endl;
+   cout << TICKET_MSG                                                 << endl
+        << TICKET_SEPARATION_SYM                                      << endl
+        << TICKET_BASE_MSG         << setw(WIDTH)                     << right
+        << PRICE_TAX_BASE                                             << endl
+        << TICKET_BAG_MSG          << setw(WIDTH)                     << right
+        << BagTotal                                                   << endl
+        << TICKET_PRICE_MSG        << setw(WIDTH)                     << right
+        << tripTotal                                                  << endl
+        << setw(WIDTH_TOTAL_PRICE) << TICKET_TOTAL_MSG << setw(WIDTH) << right
+        << finalTotal 			                                        << endl;
 
    //-------------------------------------------------------------
    //                        End of program
