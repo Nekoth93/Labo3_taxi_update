@@ -70,13 +70,13 @@ int main()
    const string TICKET_TOTAL_MSG = "TOTAL : "s;
 
    //Symboles
-   const string OPEN_INTER_SYMB        = "["s;
-   const string CLOSE_INTER_SYMB       = "]"s;
-   const string WELCOME_SEPARATION_SYM = "=========================="s;
+   const string OPEN_INTER_SYMB          = "["s;
+   const string CLOSE_INTER_SYMB         = "]"s;
+   const string WELCOME_SEPARATION_SYM   = "=========================="s;
    const string MID_VALUE_SEPARATION_SYM = " - "s;
-   const string ORDER_SEPARATION_SYM = "=============="s;
-   const string DOUBLE_DOT           = " : "s;
-   const string TICKET_SEPARATION_SYM = "============"s;
+   const string ORDER_SEPARATION_SYM     = "=============="s;
+   const string DOUBLE_DOT               = " : "s;
+   const string TICKET_SEPARATION_SYM    = "============"s;
 
 
    // Others
@@ -99,7 +99,7 @@ int main()
         << HOURS_FINISH_DAY       << CLOSE_INTER_SYMB << endl               << endl;
 
    //-------------------------------------------------------------
-   // Ask the user to enter their order
+   //                       Order section
    //-------------------------------------------------------------
 
    const int HOUR_TO_MINUTE = 60;
@@ -126,11 +126,11 @@ int main()
    const int MAX_SPEED = 120;
 
 
-   cout << ORDER_MSG                   << endl
-        << ORDER_SEPARATION_SYM        << endl
-        << BAG_ORDER_MSG    << OPEN_INTER_SYMB << MIN_BAG
-        << MID_VALUE_SEPARATION_SYM  << MAX_BAG
-        << CLOSE_INTER_SYMB << DOUBLE_DOT;
+   cout << ORDER_MSG            << endl
+        << ORDER_SEPARATION_SYM << endl
+        << BAG_ORDER_MSG        << OPEN_INTER_SYMB
+        << MIN_BAG              << MID_VALUE_SEPARATION_SYM << MAX_BAG
+        << CLOSE_INTER_SYMB     << DOUBLE_DOT;
    cin  >> numberBag;
    CLEAR_BUFFER;
 
@@ -145,8 +145,9 @@ int main()
        return EXIT_FAILURE;
    }
 
-    cout << DIST_ORDER_MSG << OPEN_INTER_SYMB << MIN_KM
-         << MID_VALUE_SEPARATION_SYM << MAX_KM << CLOSE_INTER_SYMB << DOUBLE_DOT;
+    cout << DIST_ORDER_MSG   << OPEN_INTER_SYMB
+         << MIN_KM           << MID_VALUE_SEPARATION_SYM << MAX_KM
+         << CLOSE_INTER_SYMB << DOUBLE_DOT;
     cin  >> distanceTrip;
     CLEAR_BUFFER;
 
@@ -157,8 +158,9 @@ int main()
        return EXIT_FAILURE;
     }
 
-    cout << SPEED_ORDER_MSG << OPEN_INTER_SYMB << MIN_SPEED << MID_VALUE_SEPARATION_SYM
-         << MAX_SPEED << CLOSE_INTER_SYMB << DOUBLE_DOT;
+    cout << SPEED_ORDER_MSG  << OPEN_INTER_SYMB
+         << MIN_SPEED        << MID_VALUE_SEPARATION_SYM << MAX_SPEED
+         << CLOSE_INTER_SYMB << DOUBLE_DOT;
     cin  >> averageSpeed;
     CLEAR_BUFFER;
 
@@ -182,15 +184,17 @@ int main()
     depTimeInMinutes <  HOURS_FINISH_DAY * HOUR_TO_MINUTE)
     {
         if (depTimeInMinutes + travelTimeInMinutes > HOURS_FINISH_DAY
-                                                     * HOUR_TO_MINUTE) {
-            tripTotal = (depTimeInMinutes + travelTimeInMinutes -
-                         HOURS_FINISH_DAY * HOUR_TO_MINUTE) *
-                        PRICE_MINUTE_NIGHT +
+            * HOUR_TO_MINUTE)
+        {
+            tripTotal = (depTimeInMinutes   + travelTimeInMinutes -
+                         HOURS_FINISH_DAY   * HOUR_TO_MINUTE)     *
+                         PRICE_MINUTE_NIGHT +
 
                         (HOURS_FINISH_DAY * HOUR_TO_MINUTE -
                          depTimeInMinutes) * PRICE_MINUTE_DAY;
-        } else {
-
+        }
+        else
+        {
             tripTotal = travelTimeInMinutes * PRICE_MINUTE_DAY;
         }
 
@@ -199,31 +203,6 @@ int main()
     else if (depTimeInMinutes <  HOURS_BEGIN_DAY  * HOUR_TO_MINUTE or
              depTimeInMinutes >= HOURS_FINISH_DAY * HOUR_TO_MINUTE)
     {
-//       // dépassement si départ avant minuit.
-//       if((depTimeInMinutes + travelTimeInMinutes) - MINUTES_IN_DAY >
-//          HOURS_BEGIN_DAY)
-//       {
-//          tripTotal = (depTimeInMinutes   + travelTimeInMinutes -
-//                       MINUTES_IN_DAY - HOURS_BEGIN_DAY * HOUR_TO_MINUTE) *
-//                      PRICE_MINUTE_DAY +
-//
-//                      (MINUTES_IN_DAY + HOURS_BEGIN_DAY * HOUR_TO_MINUTE -
-//                       depTimeInMinutes) * PRICE_MINUTE_NIGHT;
-//       }
-//          // dépassement si départ après minuit
-//       else if (depTimeInMinutes + travelTimeInMinutes > HOURS_BEGIN_DAY * HOUR_TO_MINUTE)
-//       {
-//          tripTotal = (depTimeInMinutes + travelTimeInMinutes -
-//                       HOURS_BEGIN_DAY * HOUR_TO_MINUTE) * PRICE_MINUTE_DAY +
-//
-//                      (HOURS_BEGIN_DAY - depTimeInMinutes) * PRICE_MINUTE_NIGHT;
-//       }
-//
-//       else
-//       {
-//          // Casting to double to avoid integer division
-//          tripTotal = travelTimeInMinutes * PRICE_MINUTE_NIGHT;
-//       }
        // If the trip exceeds midnight
         if (depTimeInMinutes + travelTimeInMinutes >= MINUTES_IN_DAY)
         {
@@ -234,24 +213,34 @@ int main()
                          PRICE_MINUTE_NIGHT;
             //if the trip start before midnight and finish in the morning
             if ((depTimeInMinutes + travelTimeInMinutes) - MINUTES_IN_DAY >
-                HOURS_BEGIN_DAY)
+                HOURS_BEGIN_DAY * HOUR_TO_MINUTE)
             {
-                              //calculate how much time of day we have to add.
-                tripTotal += (depTimeInMinutes  + travelTimeInMinutes -
-                              HOURS_BEGIN_DAY   * HOUR_TO_MINUTE)     *
-                              PRICE_MINUTE_DAY;
+
+                tripTotal =  (depTimeInMinutes + travelTimeInMinutes -
+                             MINUTES_IN_DAY - HOURS_BEGIN_DAY * HOUR_TO_MINUTE) *
+                             PRICE_MINUTE_DAY +
+
+                             (MINUTES_IN_DAY + HOURS_BEGIN_DAY * HOUR_TO_MINUTE
+                             - depTimeInMinutes)* PRICE_MINUTE_NIGHT;
             }
         }
-//        else if (0 <= depTimeInMinutes and depTimeInMinutes < HOURS_BEGIN_DAY *
-//                 HOUR_TO_MINUTE)
-//        {
-//
-//        }
-
-        else
+        else if (0 <= depTimeInMinutes and depTimeInMinutes < HOURS_BEGIN_DAY *
+                 HOUR_TO_MINUTE)
         {
-          // Casting to double to avoid integer division
-          tripTotal = travelTimeInMinutes * PRICE_MINUTE_NIGHT;
+           if(depTimeInMinutes + travelTimeInMinutes > HOURS_BEGIN_DAY *
+           HOUR_TO_MINUTE)
+           {
+              tripTotal = depTimeInMinutes   + travelTimeInMinutes -
+                          HOURS_BEGIN_DAY   * HOUR_TO_MINUTE       *
+                          PRICE_MINUTE_DAY +
+
+                          (HOURS_BEGIN_DAY * HOUR_TO_MINUTE -
+                          depTimeInMinutes) * PRICE_MINUTE_NIGHT;
+           }
+           else
+           {
+              tripTotal = travelTimeInMinutes * PRICE_MINUTE_NIGHT;
+           }
         }
     }
     else
@@ -259,7 +248,6 @@ int main()
             "0 et 23" << endl;
        return EXIT_FAILURE;
     }
-
 
    //-------------------------------------------------------------
    // If all values are correct, calculate the total
