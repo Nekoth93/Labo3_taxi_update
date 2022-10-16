@@ -1,22 +1,34 @@
 /*-----------------------------------------------------------------------------------
-Nom du fichier       : Labo_02_Taxi_j.cpp
-Auteur(s) 		      : Kevin Auberson & Nicolas Carbonara
+Nom du fichier       : Labo_03_Taxi_Update_Delétraz_Drompt.cpp
+Auteur(s)            : Kevin Auberson & Nicolas Carbonara
 Modification         : Delétraz Alexandre - Drompt Laurie
-Date creation 	      : 07.10.2022
+Date creation        : 07.10.2022
 Date de modification : 12.10.2022
-Description 	      : Calcule le prix d’une course d'un taxi
-Remarque(s) 	      : Le programme ne gère pas les erreurs de saisie (caractères
+Description          : Calcule le prix d’une course d'un taxi
+Remarque(s)          : Le programme ne gère pas les erreurs de saisie (caractères
                        spéciaux et lettres).
                        Le programme traite les valeurs incorrectes (hors champ).
                        Dans un tel cas, le programme s'interrompt et affiche un
                        message d'erreur.
+                       Nous avons des warning en ligne 228 et 229 que nous ne
+                       comprenons pas, mais qui ne semble pas altérer le
+                       fonctionnement du programme.
+                       En ligne 253, nous avons un autre warning où nous avons une
+                       condition qui sera toujours true. Nous l'avons laissée
+                       ainsi, car elle ne dérange pas au fonctionnement du code et
+                       elle nous permettait de mieux nous situer dans la tranche
+                       horaire.
+                       Nous avons un dernier warning en ligne 281. Si toutes nos
+                       conditions sont fausses, la variable en question risque de
+                       ne pas être initialisé, mais ce cas ne peut normalement pas
+                       arriver.
 Compilateur 	      : Mingw-w64 g++ 12.1.0
 -----------------------------------------------------------------------------------*/
 
 #include <iomanip>  // setw(...) et setprecision(...)
 #include <cstdlib>  // EXIT_SUCCESS
 #include <iostream> // cout et cin
-#include <limits>	  // numeric_limits<streamsize>
+#include <limits>   // numeric_limits<streamsize>
 #include <string>   // to work with strings
 
 #define CLEAR_BUFFER cin.ignore(numeric_limits<streamsize>::max(), '\n')
@@ -33,8 +45,17 @@ int main()
    const double PRICE_TAX_BAG      = 2.60;
    const double PRICE_MINUTE_DAY   = 1.00;
    const double PRICE_MINUTE_NIGHT = 1.60;
-   const int 	 HOURS_BEGIN_DAY    = 8;
-   const int 	 HOURS_FINISH_DAY   = 20;
+   const int    HOURS_BEGIN_DAY    = 8;
+   const int    HOURS_FINISH_DAY   = 20;
+
+   // Users min/max inputs.
+   const int MIN_BAG    = 0;
+   const int MAX_BAG    = 4;
+   const int MIN_KM     = 0;
+   const int MAX_KM     = 500;
+   const int MIN_SPEED  = 50;
+   const int MAX_SPEED  = 120;
+   const int FIRST_HOUR = 0;
 
    //Text messages.
 
@@ -60,12 +81,12 @@ int main()
    const string DIST_ORDER_MSG   = "- distance [km]    "s;
    const string FRENCH_AND       = " et "s;
    const string SPEED_ORDER_MSG  = "- vitesse         "s;
-   const string DEP_ORDER_MSG    = "- depart            "s;
+   const string DEP_ORDER_MSG    = "- depart             "s;
    const string TIME_FORMAT_MSG  = "[hh:mm]"s;
    const string TICKET_MSG       = "Votre ticket"s;
    const string EXIT_MSG         = "Presser ENTRER pour quitter"s;
    const string TICKET_BASE_MSG  = " - prise en charge  	: "s;
-   const string TICKET_BAG_MSG   = " - supp bagages    	: "s;
+   const string TICKET_BAG_MSG   = " - supp bagages       	: "s;
    const string TICKET_PRICE_MSG = " - prix de la course 	: "s;
    const string TICKET_TOTAL_MSG = "TOTAL : "s;
    const string LAST_HOUR        = "23:59"s;
@@ -83,9 +104,10 @@ int main()
    // Others
    const int WIDTH             = 8;
    const int WIDTH_TOTAL_PRICE = 26;
+   const int PRECISION         = 2;
 
    // Setting the precision of the output and aligns it to the left.
-   cout << fixed << setprecision(2) << left;
+   cout << fixed << setprecision(PRECISION) << left;
 
    //-------------------------------------------------------------
    //                          Welcome
@@ -118,15 +140,6 @@ int main()
    double BagTotal;
    double tripTotal;
    double finalTotal;
-
-   // Users min/max inputs.
-   const int MIN_BAG    = 0;
-   const int MAX_BAG    = 4;
-   const int MIN_KM     = 0;
-   const int MAX_KM	   = 500;
-   const int MIN_SPEED  = 50;
-   const int MAX_SPEED  = 120;
-   const int FIRST_HOUR = 0;
 
    cout << ORDER_MSG            << endl
         << ORDER_SEPARATION_SYM << endl
