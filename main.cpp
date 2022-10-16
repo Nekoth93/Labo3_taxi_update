@@ -26,7 +26,7 @@ using namespace std;
 int main()
 {
    //-------------------------------------------------------------
-   // Initializing constants
+   //                  Initializing constants
    //-------------------------------------------------------------
    // Prices
    const double PRICE_TAX_BASE     = 5.00;
@@ -36,7 +36,7 @@ int main()
    const int 	 HOURS_BEGIN_DAY    = 8;
    const int 	 HOURS_FINISH_DAY   = 20;
 
-   //Text messages
+   //Text messages.
 
    const string WELCOME_MSG      = "\nBonjour, ce programme permet de calculer\n"
                                      "le prix d'une course de taxi.\n"
@@ -68,6 +68,7 @@ int main()
    const string TICKET_BAG_MSG   = " - supp bagages    	: "s;
    const string TICKET_PRICE_MSG = " - prix de la course 	: "s;
    const string TICKET_TOTAL_MSG = "TOTAL : "s;
+   const string LAST_HOUR        = "23:59"s;
 
    //Symboles
    const string OPEN_INTER_SYMB          = "["s;
@@ -83,7 +84,7 @@ int main()
    const int 	 WIDTH              = 8;
    const int	 WIDTHTOTALPRICE    = 26;
 
-  // Setting the precision of the output and aligns it to the left
+   // Setting the precision of the output and aligns it to the left.
    cout << fixed << setprecision(2) << left;
 
    //-------------------------------------------------------------
@@ -105,7 +106,7 @@ int main()
    const int HOUR_TO_MINUTE = 60;
    const int MINUTES_IN_DAY = 24 * HOUR_TO_MINUTE;
 
-   // Users inputs
+   // Users inputs.
    int    numberBag;
    int    distanceTrip;
    int    averageSpeed;
@@ -117,14 +118,14 @@ int main()
    double tripTotal;
    double finalTotal;
 
-   // Users min/max inputs
-   const int MIN_BAG   = 0;
-   const int MAX_BAG   = 4;
-   const int MIN_KM    = 0;
-   const int MAX_KM	  = 500;
-   const int MIN_SPEED = 50;
-   const int MAX_SPEED = 120;
-
+   // Users min/max inputs.
+   const int MIN_BAG     = 0;
+   const int MAX_BAG     = 4;
+   const int MIN_KM      = 0;
+   const int MAX_KM	    = 500;
+   const int MIN_SPEED   = 50;
+   const int MAX_SPEED   = 120;
+   const int FIRST_HOUR  = 0;
 
    cout << ORDER_MSG            << endl
         << ORDER_SEPARATION_SYM << endl
@@ -134,7 +135,7 @@ int main()
    cin  >> numberBag;
    CLEAR_BUFFER;
 
-   // Check if the number of bag is between MIN_BAG and MAX_BAG
+   // Check if the number of bag is between MIN_BAG and MAX_BAG.
    if (numberBag >= MIN_BAG and numberBag <= MAX_BAG)
    {
        BagTotal = PRICE_TAX_BAG * numberBag;
@@ -145,140 +146,143 @@ int main()
        return EXIT_FAILURE;
    }
 
-    cout << DIST_ORDER_MSG   << OPEN_INTER_SYMB
-         << MIN_KM           << MID_VALUE_SEPARATION_SYM << MAX_KM
-         << CLOSE_INTER_SYMB << DOUBLE_DOT;
-    cin  >> distanceTrip;
-    CLEAR_BUFFER;
+   cout << DIST_ORDER_MSG   << OPEN_INTER_SYMB
+        << MIN_KM           << MID_VALUE_SEPARATION_SYM << MAX_KM
+        << CLOSE_INTER_SYMB << DOUBLE_DOT;
+   cin  >> distanceTrip;
+   CLEAR_BUFFER;
+   // check if the distance is between MIN_KM and MAX_KM.
+   if (!(distanceTrip >= MIN_KM and distanceTrip <= MAX_KM))
+   {
+      cout << DIST_ERROR_MSG << MIN_KM << FRENCH_AND << MAX_KM << endl;
+      return EXIT_FAILURE;
+   }
 
-    // check if the distance is between MIN_KM and MAX_KM
-    if (!(distanceTrip >= MIN_KM and distanceTrip <= MAX_KM))
-    {
-       cout << DIST_ERROR_MSG << MIN_KM << FRENCH_AND << MAX_KM << endl;
-       return EXIT_FAILURE;
-    }
+   cout << SPEED_ORDER_MSG  << OPEN_INTER_SYMB
+        << MIN_SPEED        << MID_VALUE_SEPARATION_SYM << MAX_SPEED
+        << CLOSE_INTER_SYMB << DOUBLE_DOT;
+   cin  >> averageSpeed;
+   CLEAR_BUFFER;
 
-    cout << SPEED_ORDER_MSG  << OPEN_INTER_SYMB
-         << MIN_SPEED        << MID_VALUE_SEPARATION_SYM << MAX_SPEED
-         << CLOSE_INTER_SYMB << DOUBLE_DOT;
-    cin  >> averageSpeed;
-    CLEAR_BUFFER;
+   // check if the speed is between MIN_SPEED and MAX_SPEED.
+   if (!(averageSpeed >= MIN_SPEED and averageSpeed <= MAX_SPEED))
+   {
+      cout << SPEED_ERROR_MSG << MIN_SPEED << FRENCH_AND << MAX_SPEED << endl;
+      return EXIT_FAILURE;
+   }
 
-    // check if the speed is between MIN_SPEED and MAX_SPEED
-    if (!(averageSpeed >= MIN_SPEED and averageSpeed <= MAX_SPEED))
-    {
-       cout << SPEED_ERROR_MSG << MIN_SPEED << FRENCH_AND << MAX_SPEED << endl;
-       return EXIT_FAILURE;
-    }
+   cout << DEP_ORDER_MSG << TIME_FORMAT_MSG << DOUBLE_DOT;
+   cin  >> hourBegin     >> minuteBegin;
+   depTimeInMinutes = hourBegin * HOUR_TO_MINUTE + minuteBegin;
+   // Insert a blank line for a better reading on the output.
+   cout << endl;
+   CLEAR_BUFFER;
 
-    cout << DEP_ORDER_MSG << TIME_FORMAT_MSG << DOUBLE_DOT;
-    cin  >> hourBegin >> minuteBegin;
-    depTimeInMinutes = hourBegin * HOUR_TO_MINUTE + minuteBegin;
-    // Insert a blank line for a better reading on the output
-    cout << endl;
-    CLEAR_BUFFER;
+   if (depTimeInMinutes < FIRST_HOUR or depTimeInMinutes >= MINUTES_IN_DAY)
+   {
+      cout << TIME_ERROR_MSG << OPEN_INTER_SYMB
+           << FIRST_HOUR     << MID_VALUE_SEPARATION_SYM << LAST_HOUR
+           << CLOSE_INTER_SYMB;
 
-    double travelTimeInMinutes = double(distanceTrip) / averageSpeed * HOUR_TO_MINUTE;
-    // IF start hour is between the hour of the day then take day prices
-    if (depTimeInMinutes >= HOURS_BEGIN_DAY  * HOUR_TO_MINUTE and
-    depTimeInMinutes <  HOURS_FINISH_DAY * HOUR_TO_MINUTE)
-    {
-        if (depTimeInMinutes + travelTimeInMinutes > HOURS_FINISH_DAY
-            * HOUR_TO_MINUTE)
-        {
-            tripTotal = (depTimeInMinutes   + travelTimeInMinutes -
-                         HOURS_FINISH_DAY   * HOUR_TO_MINUTE)     *
-                         PRICE_MINUTE_NIGHT +
+      return EXIT_FAILURE;
+   }
 
-                        (HOURS_FINISH_DAY * HOUR_TO_MINUTE -
-                         depTimeInMinutes) * PRICE_MINUTE_DAY;
-        }
-        else
-        {
-            tripTotal = travelTimeInMinutes * PRICE_MINUTE_DAY;
-        }
+   double travelTimeInMinutes = double(distanceTrip) / averageSpeed * HOUR_TO_MINUTE;
+   // IF start hour is between the hour of the day then take day prices
+   if (depTimeInMinutes >= HOURS_BEGIN_DAY  * HOUR_TO_MINUTE and
+       depTimeInMinutes <  HOURS_FINISH_DAY * HOUR_TO_MINUTE)
+   {
+      if (depTimeInMinutes + travelTimeInMinutes > HOURS_FINISH_DAY
+          * HOUR_TO_MINUTE)
+      {
+         tripTotal =  //calculates the time that exceeds the night.
+                      (depTimeInMinutes   + travelTimeInMinutes -
+                      HOURS_FINISH_DAY   * HOUR_TO_MINUTE)     *
+                      PRICE_MINUTE_NIGHT +
+                      //calculate the time which is in days.
+                      (HOURS_FINISH_DAY * HOUR_TO_MINUTE -
+                      depTimeInMinutes) * PRICE_MINUTE_DAY;
+      }
+      else
+      {
+         //normal calculus
+         tripTotal = travelTimeInMinutes * PRICE_MINUTE_DAY;
+      }
 
-    }
-    // else take night prices
-    else if (depTimeInMinutes <  HOURS_BEGIN_DAY  * HOUR_TO_MINUTE or
-             depTimeInMinutes >= HOURS_FINISH_DAY * HOUR_TO_MINUTE)
-    {
-       // If the trip exceeds midnight
-        if (depTimeInMinutes + travelTimeInMinutes >= MINUTES_IN_DAY)
-        {
-            tripTotal = //from 20 h to midnight.
-                        (MINUTES_IN_DAY - depTimeInMinutes +
-                        //after midnight
-                         travelTimeInMinutes - (MINUTES_IN_DAY - depTimeInMinutes)) *
-                         PRICE_MINUTE_NIGHT;
-            //if the trip start before midnight and finish in the morning
-            if ((depTimeInMinutes + travelTimeInMinutes) - MINUTES_IN_DAY >
-                HOURS_BEGIN_DAY * HOUR_TO_MINUTE)
-            {
+   }
+   // else take night prices
+   else if (depTimeInMinutes <  HOURS_BEGIN_DAY  * HOUR_TO_MINUTE or
+            depTimeInMinutes >= HOURS_FINISH_DAY * HOUR_TO_MINUTE)
+   {
+      // If the trip exceeds midnight
+      if (depTimeInMinutes + travelTimeInMinutes >= MINUTES_IN_DAY)
+      {
+         tripTotal = //from 20 h to midnight.
+                     (MINUTES_IN_DAY - depTimeInMinutes +
+                     //after midnight.
+                     travelTimeInMinutes - (MINUTES_IN_DAY - depTimeInMinutes)) *
+                     PRICE_MINUTE_NIGHT;
+         //if the trip start before midnight and finish in the morning.
+         if ((depTimeInMinutes + travelTimeInMinutes) - MINUTES_IN_DAY >
+              HOURS_BEGIN_DAY * HOUR_TO_MINUTE)
+         {
 
-                tripTotal =  (depTimeInMinutes + travelTimeInMinutes -
-                             MINUTES_IN_DAY - HOURS_BEGIN_DAY * HOUR_TO_MINUTE) *
-                             PRICE_MINUTE_DAY +
+            tripTotal = //calculates the time that exceeds the day.
+                        (depTimeInMinutes + travelTimeInMinutes -
+                        MINUTES_IN_DAY - HOURS_BEGIN_DAY * HOUR_TO_MINUTE) *
+                        PRICE_MINUTE_DAY +
+                        //calculate what remain in night.
+                        (MINUTES_IN_DAY + HOURS_BEGIN_DAY * HOUR_TO_MINUTE -
+                         depTimeInMinutes) * PRICE_MINUTE_NIGHT;
+         }
+      }
+      else if (0 <= depTimeInMinutes and depTimeInMinutes < HOURS_BEGIN_DAY *
+                HOUR_TO_MINUTE)
+      {
+         if (depTimeInMinutes + travelTimeInMinutes > HOURS_BEGIN_DAY *
+              HOUR_TO_MINUTE)
+         {
+            tripTotal = depTimeInMinutes + travelTimeInMinutes -
+               HOURS_BEGIN_DAY * HOUR_TO_MINUTE *
+               PRICE_MINUTE_DAY +
 
-                             (MINUTES_IN_DAY + HOURS_BEGIN_DAY * HOUR_TO_MINUTE
-                             - depTimeInMinutes)* PRICE_MINUTE_NIGHT;
-            }
-        }
-        else if (0 <= depTimeInMinutes and depTimeInMinutes < HOURS_BEGIN_DAY *
-                 HOUR_TO_MINUTE)
-        {
-           if(depTimeInMinutes + travelTimeInMinutes > HOURS_BEGIN_DAY *
-           HOUR_TO_MINUTE)
-           {
-              tripTotal = depTimeInMinutes   + travelTimeInMinutes -
-                          HOURS_BEGIN_DAY   * HOUR_TO_MINUTE       *
-                          PRICE_MINUTE_DAY +
+               (HOURS_BEGIN_DAY * HOUR_TO_MINUTE -
+               depTimeInMinutes) * PRICE_MINUTE_NIGHT;
+         }
+         else
+         {
+            tripTotal = travelTimeInMinutes * PRICE_MINUTE_NIGHT;
+         }
+      }
+      else
+      {
+         tripTotal = travelTimeInMinutes * PRICE_MINUTE_NIGHT;
+      }
+   }
 
-                          (HOURS_BEGIN_DAY * HOUR_TO_MINUTE -
-                          depTimeInMinutes) * PRICE_MINUTE_NIGHT;
-           }
-           else
-           {
-              tripTotal = travelTimeInMinutes * PRICE_MINUTE_NIGHT;
-           }
-        }
-        else
-        {
-           tripTotal = travelTimeInMinutes * PRICE_MINUTE_NIGHT;
-        }
-    }
-    else
-    {	cout << "Erreur : l'heure de depart doit etre comprise entre "
-            "0 et 23" << endl;
-       return EXIT_FAILURE;
-    }
 
    //-------------------------------------------------------------
-   // If all values are correct, calculate the total
+   //     If all values are correct, calculate the total
    //-------------------------------------------------------------
 
    finalTotal = PRICE_TAX_BASE + BagTotal + tripTotal;
 
-   cout << TICKET_MSG        << endl
-        << TICKET_SEPARATION_SYM        << endl
-        << TICKET_BASE_MSG           << setw(WIDTH) << right
-        << PRICE_TAX_BASE        << endl
-        << TICKET_BAG_MSG          << setw(WIDTH) << right
-        << BagTotal              << endl
-        << TICKET_PRICE_MSG        << setw(WIDTH) << right
-        << tripTotal 	         << endl
-        << setw(WIDTHTOTALPRICE) << TICKET_TOTAL_MSG << setw(WIDTH) << right
-        << finalTotal 			   << endl;
+   cout << TICKET_MSG             << endl
+        << TICKET_SEPARATION_SYM  << endl
+        << TICKET_BASE_MSG        << setw(WIDTH)                     << right
+        << PRICE_TAX_BASE         << endl
+        << TICKET_BAG_MSG         << setw(WIDTH)                     << right
+        << BagTotal               << endl
+        << TICKET_PRICE_MSG       << setw(WIDTH)                     << right
+        << tripTotal 	          << endl
+        << setw(WIDTHTOTALPRICE)  << TICKET_TOTAL_MSG << setw(WIDTH) << right
+        << finalTotal 			    << endl;
 
    //-------------------------------------------------------------
-   // End of program
+   //                        End of program
    //-------------------------------------------------------------
    cout << EXIT_MSG;
    CLEAR_BUFFER;
 
-   /*
-    * Travail à faire :
-    * Gérer le changement de tarif durant le trajet de nuit à jour.
-    */
    return EXIT_SUCCESS;
 }
