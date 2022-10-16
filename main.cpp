@@ -242,6 +242,10 @@ int main()
               tripTotal = travelTimeInMinutes * PRICE_MINUTE_NIGHT;
            }
         }
+        else
+        {
+           tripTotal = travelTimeInMinutes * PRICE_MINUTE_NIGHT;
+        }
     }
     else
     {	cout << "Erreur : l'heure de depart doit etre comprise entre "
